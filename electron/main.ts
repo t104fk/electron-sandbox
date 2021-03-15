@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as isDev from 'electron-is-dev';
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
+import setMainMenu from './mainMenu';
 
 let win: BrowserWindow | null = null;
 
@@ -22,6 +23,7 @@ function createWindow() {
   }
 
   win.on('closed', () => win = null);
+  setMainMenu();
 
   // Hot Reloading
   if (isDev) {
