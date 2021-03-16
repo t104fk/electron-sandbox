@@ -1,8 +1,9 @@
-import { app, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { MenuItemConstructorOptions } from 'electron/main';
+import { showMeowMessage } from './dialog';
 const isWindows = process.platform === 'win32';
 
-const setMainMenu = () => {
+const setMainMenu = (mainWindow: BrowserWindow) => {
   const template: MenuItemConstructorOptions[] = [
     {
       label: 'CustomMenu',
@@ -27,7 +28,18 @@ const setMainMenu = () => {
         { role: 'paste' },
         { role: 'selectAll' }
       ]
-    }
+    },
+    {
+      label: 'Dialog',
+      submenu: [
+        {
+          label: 'Say Hello',
+          click() {
+            showMeowMessage(mainWindow)
+          }
+        }
+      ]
+    },
   ]
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);

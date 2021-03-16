@@ -1,8 +1,9 @@
-import { app, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as isDev from 'electron-is-dev';
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import setMainMenu from './mainMenu';
+import { showSaveDialog } from './dialog';
 
 let win: BrowserWindow | null = null;
 
@@ -23,7 +24,7 @@ function createWindow() {
   }
 
   win.on('closed', () => win = null);
-  setMainMenu();
+  setMainMenu(win);
 
   // Hot Reloading
   if (isDev) {
@@ -58,3 +59,7 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+ipcMain.on('notifyText', (_, args) => {
+  win && showSaveDialog(args)(win);
+})
