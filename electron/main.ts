@@ -1,4 +1,4 @@
-import { app, ipcMain, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import * as path from 'path';
 import * as isDev from 'electron-is-dev';
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
@@ -7,14 +7,14 @@ import { showSaveDialog } from './dialog';
 
 let win: BrowserWindow | null = null;
 
-function createWindow() {
-  win = new BrowserWindow({
+function createWindow(options: BrowserWindowConstructorOptions) {
+  win = new BrowserWindow(Object.assign({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
     }
-  })
+  }, options))
 
   if (isDev) {
     win.loadURL('http://localhost:3000/index.html');
@@ -36,17 +36,31 @@ function createWindow() {
     });
   }
 
-  // DevTools
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
-
-  if (isDev) {
-    win.webContents.openDevTools();
-  }
+  // if (isDev) {
+  //   win.webContents.openDevTools();
+  // }
 }
 
-app.on('ready', createWindow);
+// electron-developer-toolsで読み込めないので
+// const reactDevToolsPath = path.join(
+//   os.homedir(),
+//   'workspace/electron-sandbox',
+//   'react-developer-tools-4.10.1_0'
+// )
+// app.whenReady().then(async () => {
+//   // installExtension(REACT_DEVELOPER_TOOLS)
+//   //   .then((name) => console.log(`Added Extension:  ${name}`))
+//   //   .catch((err) => console.log('An error occurred: ', err));
+//   await session.defaultSession.loadExtension(reactDevToolsPath, { allowFileAccess: true })
+// })
+
+app.on('ready', () => {
+  ipcMain.on('createWindow', (e, props) => {
+    console.log('createWindow', e);
+    createWindow(props)
+  })
+  createWindow({});
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -56,10 +70,10 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (win === null) {
-    createWindow();
+    createWindow({});
   }
 });
 
-ipcMain.on('notifyText', (_, args) => {
-  win && showSaveDialog(args)(win);
-})
+// ipcMain.on('notifyText', (_, args) => {
+//   win && showSaveDialog(args)(win);
+// })

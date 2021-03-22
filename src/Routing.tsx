@@ -4,6 +4,7 @@ import { Counter } from './pages/Counter';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { TTheme } from './theme';
+import { IPC } from './pages/IPC';
 
 const listStyle = css`
   display: flex;
@@ -25,6 +26,7 @@ const Routing = () => {
       <ul className={listStyle}>
         <li><Link className={linkStyle} to="/">Home</Link></li>
         <li><Link className={linkStyle} to="/counter">Counter</Link></li>
+        <li><Link className={linkStyle} to="/ipc">IPC</Link></li>
       </ul>
     </nav>
     <Switch>
@@ -36,6 +38,8 @@ const Routing = () => {
       <Route path="/counter">
         <Counter></Counter>
       </Route>
+      {/* node modulesを読み込もうとして死ぬ */}
+      {/* <Route path="/ipc"><IPC></IPC></Route> */}
     </Switch>
   </Router>
 }
