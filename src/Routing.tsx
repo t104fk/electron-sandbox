@@ -39,7 +39,7 @@ const Routing = () => {
         <Counter></Counter>
       </Route>
       {/* node modulesを読み込もうとして死ぬ */}
-      {/* <Route path="/ipc"><IPC></IPC></Route> */}
+      <Route path="/ipc"><IPC></IPC></Route>
     </Switch>
   </Router>
 }

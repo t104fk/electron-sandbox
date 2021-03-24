@@ -12,7 +12,8 @@ function createWindow(options: BrowserWindowConstructorOptions) {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     }
   }, options))
 
@@ -36,9 +37,9 @@ function createWindow(options: BrowserWindowConstructorOptions) {
     });
   }
 
-  // if (isDev) {
-  //   win.webContents.openDevTools();
-  // }
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 }
 
 // electron-developer-toolsで読み込めないので
@@ -47,12 +48,12 @@ function createWindow(options: BrowserWindowConstructorOptions) {
 //   'workspace/electron-sandbox',
 //   'react-developer-tools-4.10.1_0'
 // )
-// app.whenReady().then(async () => {
-//   // installExtension(REACT_DEVELOPER_TOOLS)
-//   //   .then((name) => console.log(`Added Extension:  ${name}`))
-//   //   .catch((err) => console.log('An error occurred: ', err));
+app.whenReady().then(async () => {
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
 //   await session.defaultSession.loadExtension(reactDevToolsPath, { allowFileAccess: true })
-// })
+})
 
 app.on('ready', () => {
   ipcMain.on('createWindow', (e, props) => {
@@ -74,6 +75,9 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.handle('test', (_, args) => {
+  console.log('test is invoked!', args);
+})
 // ipcMain.on('notifyText', (_, args) => {
 //   win && showSaveDialog(args)(win);
 // })

@@ -1,10 +1,10 @@
-import { ipcRenderer } from 'electron';
+const { test } = window.rpc;
 
 export const IPC = () => {
   const handleCreateWindow = () => {
-    ipcRenderer.send('createWindow', {})
+    test('msgggggg!');
   }
   return <div>
-    <button onClick={handleCreateWindow}></button>
+    <button onClick={handleCreateWindow}>call</button>
   </div>
 }
